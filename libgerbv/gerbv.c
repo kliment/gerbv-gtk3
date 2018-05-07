@@ -141,8 +141,10 @@ gerbv_destroy_project (gerbv_project_t *gerbvProject){
 	
 	/* destroy all the files attached to the project */
 	for(i = gerbvProject->last_loaded; i >= 0; i--) {
-		if (gerbvProject->file[i])
+		if (gerbvProject->file[i]){
 			gerbv_destroy_fileinfo (gerbvProject->file[i]);
+			g_free(gerbvProject->file[i]);
+		}
 	}
 	/* destroy strings */
 	g_free (gerbvProject->path);
@@ -467,6 +469,7 @@ gerbv_open_image(gerbv_project_t *gerbvProject, char *filename, int idx, int rel
 	parsed_image = NULL;
     }
     
+    g_free(fd->filename);
     gerb_fclose(fd);
     if (parsed_image == NULL) {
 	return -1;
